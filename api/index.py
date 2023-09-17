@@ -8,4 +8,11 @@ def hello_world():
 
 @app.post("/api/login")
 def login():
-    return {"stauts": True, "message": "Login Success"}
+    return {
+        "stauts": True,
+        "message": "Login Success",
+        "user": {
+            "id": 1,
+            "name": "John Doe",
+        },
+        }

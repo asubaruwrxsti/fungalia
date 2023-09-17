@@ -1,6 +1,8 @@
 'use client';
 import { withSessionSsr } from '@/lib/withSession';
+import { useRouter } from "next/navigation";
 export default function LoginForm() {
+    const router = useRouter();
     return (
         <form
             className="flex flex-col items-center justify-center border border-gray-400 p-8 rounded-md"
@@ -17,6 +19,7 @@ export default function LoginForm() {
                     }).then((res) => {
                         if (res.status) {
                             console.log({username, password});
+                            router.push('/');
                         } else {
                             alert('Login failed');
                         }
@@ -39,11 +42,24 @@ export default function LoginForm() {
     )
 }
 
-export const getServerSideProps = withSessionSsr(async function ({req, res}) {
-    console.log(res);
-    return {
-        props: {
-            username: req.session.get('username') || null
+export const getServerSideProps = withSessionSsr(
+    async function getServersideProps({ req, res }) {
+        try {
+            const username = req.session.username || "asd";
+            return {
+                props: {
+                    username: username
+                }
+            }
+        }
+        catch(err) {
+            console.log("page Home error", err);
+            return {
+                redirect: {
+                    destination: '/login',
+                    statusCode: 307
+                }
+            }
         }
     }
-})
+)
