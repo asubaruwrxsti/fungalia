@@ -1,4 +1,3 @@
-'use client';
 import { withSessionSsr } from '@/lib/withSession';
 import { useRouter } from "next/navigation";
 export default function LoginForm() {
