@@ -38,7 +38,7 @@ You can clone & deploy it to Vercel with one click:
 You can clone & create this repo with the following command
 
 ```bash
-npx create-next-app nextjs-fastapi --example "https://github.com/digitros/nextjs-fastapi"
+npx create-next-pages nextjs-fastapi --example "https://github.com/digitros/nextjs-fastapi"
 ```
 
 ## Getting Started
