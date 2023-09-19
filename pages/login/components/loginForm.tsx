@@ -1,4 +1,3 @@
-import { withSessionSsr } from '@/lib/withSession';
 import { useRouter } from "next/navigation";
 export default function LoginForm() {
     const router = useRouter();
@@ -40,25 +39,3 @@ export default function LoginForm() {
         </form>
     )
 }
-
-export const getServerSideProps = withSessionSsr(
-    async function getServersideProps({ req, res }) {
-        try {
-            const username = req.session.username || "asd";
-            return {
-                props: {
-                    username: username
-                }
-            }
-        }
-        catch(err) {
-            console.log("page Home error", err);
-            return {
-                redirect: {
-                    destination: '/login',
-                    statusCode: 307
-                }
-            }
-        }
-    }
-)
