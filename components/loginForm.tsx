@@ -4,25 +4,25 @@ export default function LoginForm() {
     return (
         <form
             className="flex flex-col items-center justify-center border border-gray-400 p-8 rounded-md"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
                 e.preventDefault();
                 let username = (document.getElementById('username') as HTMLInputElement).value;
                 let password = (document.getElementById('password') as HTMLInputElement).value;
-                fetch('/api/login', {
+                let response = await fetch('/api/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({username, password})
-                }).then((res) => {
-                    if (res.status) {
-                        console.log({username, password});
-                        console.log(res)
-                        router.push('/');
-                    } else {
-                        alert('Login failed');
-                    }
                 });
+                response = await response.json();
+                if (response.status) {
+                    // @ts-ignore
+                    document.cookie = `username=${response.user.name}; path=/`;
+                    // @ts-ignore
+                    document.cookie = `id=${response.user.id}; path=/`;
+                    router.push('/');
+                }
             }}
         >
             <input

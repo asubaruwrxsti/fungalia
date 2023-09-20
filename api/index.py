@@ -9,7 +9,7 @@ def hello_world():
 @app.post("/api/login")
 def login():
     return {
-        "stauts": True,
+        "status": True,
         "message": "Login Success",
         "user": {
             "id": 1,
