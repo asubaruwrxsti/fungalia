@@ -17,11 +17,7 @@ export default function LoginForm() {
                 });
                 response = await response.json();
                 if (response.status) {
-                    // @ts-ignore
-                    document.cookie = `username=${response.user.name}; path=/`;
-                    // @ts-ignore
-                    document.cookie = `id=${response.user.id}; path=/`;
-                    router.push('/');
+                    console.log(response);
                 }
             }}
         >
