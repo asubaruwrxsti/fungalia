@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, Depends
 from pydantic import BaseModel
 from uuid import UUID, uuid4
 from fastapi_sessions.frontends.implementations import SessionCookie, CookieParameters
@@ -54,21 +54,21 @@ verifier = BasicVerifier(
     auth_http_exception=HTTPException(status_code=403, detail="invalid session"),
 )
 
+cookie_params = CookieParameters()
+cookie = SessionCookie(
+    cookie_name="cookie",
+    identifier="general_verifier",
+    auto_error=True,
+    secret_key="DONOTUSE",
+    cookie_params=cookie_params,
+)
+
 @app.get("/api/python")
 def hello_world():
     return {"message": "Hello World"}
 
 @app.post("/api/login")
 async def login(response: Response):
-    cookie_params = CookieParameters()
-    cookie = SessionCookie(
-        cookie_name="cookie",
-        identifier="general_verifier",
-        auto_error=True,
-        secret_key="DONOTUSE",
-        cookie_params=cookie_params,
-    )
-
     session = uuid4()
     data = SessionData(token=session, username="admin", password="admin")
 
@@ -83,3 +83,7 @@ async def login(response: Response):
             "name": "John Doe",
         },
     }
+
+@app.get("/whoami", dependencies=[Depends(cookie)])
+async def whoami(session_data: SessionData = Depends(verifier)):
+    return session_data
