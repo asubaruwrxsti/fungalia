@@ -44,7 +44,12 @@ class BasicVerifier(SessionVerifier[UUID, SessionData]):
 
     def verify_session(self, model: SessionData) -> bool:
         """If the session exists, it is valid"""
-        return True
+        if not model:
+            print("model not found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            return False
+        else:
+            print("model found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            return True
 
 backend = InMemoryBackend[UUID, SessionData]()
 verifier = BasicVerifier(
@@ -69,6 +74,17 @@ def hello_world():
 
 @app.post("/api/login")
 async def login(response: Response):
+    # verify if the user is already logged in
+    if BasicVerifier.verify_session(verifier, SessionData):
+        return {
+            "status": True,
+            "message": "Already logged in",
+            "user": {
+                "id": 1,
+                "name": "John Doe",
+            },
+        }
+
     session = uuid4()
     data = SessionData(token=session, username="admin", password="admin")
 
@@ -84,6 +100,6 @@ async def login(response: Response):
         },
     }
 
-@app.get("/whoami", dependencies=[Depends(cookie)])
+@app.get("/api/whoami", dependencies=[Depends(cookie)])
 async def whoami(session_data: SessionData = Depends(verifier)):
     return session_data
