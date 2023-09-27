@@ -44,12 +44,7 @@ class BasicVerifier(SessionVerifier[UUID, SessionData]):
 
     def verify_session(self, model: SessionData) -> bool:
         """If the session exists, it is valid"""
-        if not model:
-            print("model not found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            return False
-        else:
-            print("model found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            return True
+        return True
 
 backend = InMemoryBackend[UUID, SessionData]()
 verifier = BasicVerifier(
